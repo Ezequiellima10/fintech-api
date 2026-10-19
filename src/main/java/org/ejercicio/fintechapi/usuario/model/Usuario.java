@@ -1,4 +1,4 @@
-package org.ejercicio.fintechapi.user.model;
+package org.ejercicio.fintechapi.usuario.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -11,10 +11,10 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "usuarios")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class User {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class User {
 
     @NotBlank
     @Column(unique = true, nullable = false)
-    private String username;
+    private String nombreUsuario;
 
     @NotBlank
     @Email
@@ -30,7 +30,10 @@ public class User {
     private String email;
 
     @Column(nullable = false,  updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime fechaCreacion;
 
-
+    @PrePersist
+    void onCreate() {
+        this.fechaCreacion = LocalDateTime.now();
+    }
 }
