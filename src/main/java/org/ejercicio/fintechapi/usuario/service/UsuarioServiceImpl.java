@@ -23,7 +23,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public UsuarioResponseDTO save(UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO create(UsuarioRequestDTO dto) {
 
         if (usuarioRepository.existsByEmail(dto.email())) {
             throw new UsuarioYaExisteException("Ya existe un usuario con el email " + dto.email());

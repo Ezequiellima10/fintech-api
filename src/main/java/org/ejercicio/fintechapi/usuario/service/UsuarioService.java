@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UsuarioService {
 
-    UsuarioResponseDTO save(UsuarioRequestDTO dto);
+    UsuarioResponseDTO create(UsuarioRequestDTO dto);
 
     List<UsuarioResponseDTO> findAll();
 
