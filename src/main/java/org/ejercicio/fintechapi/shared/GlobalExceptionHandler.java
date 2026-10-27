@@ -1,11 +1,13 @@
 package org.ejercicio.fintechapi.shared;
 
 import org.ejercicio.fintechapi.shared.dto.ExceptionResponseDTO;
+import org.ejercicio.fintechapi.shared.dto.ExceptionResponseFieldsDTO;
 import org.ejercicio.fintechapi.usuario.exceptions.UsuarioNoEncontradoException;
 import org.ejercicio.fintechapi.usuario.exceptions.UsuarioYaExisteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,6 +27,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponseDTO> handleUsuarioDuplicado(UsuarioYaExisteException u){
         ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.CONFLICT.value() , LocalDateTime.now(), u.getMessage());
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponseFieldsDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
+        ExceptionResponseFieldsDTO exceptionResponseFieldsDTO = new ExceptionResponseFieldsDTO(LocalDateTime.now(), ex.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getField() + ":" + fieldError.getDefaultMessage()).toList());
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseFieldsDTO);
     }
 }
 

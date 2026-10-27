@@ -1,6 +1,7 @@
 package org.ejercicio.fintechapi.usuario.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ejercicio.fintechapi.shared.dto.ResponseDTO;
 import org.ejercicio.fintechapi.usuario.dtos.UsuarioRequestDTO;
 import org.ejercicio.fintechapi.usuario.dtos.UsuarioResponseDTO;
 import org.ejercicio.fintechapi.usuario.exceptions.UsuarioNoEncontradoException;
@@ -8,6 +9,8 @@ import org.ejercicio.fintechapi.usuario.exceptions.UsuarioYaExisteException;
 import org.ejercicio.fintechapi.usuario.mapper.UsuarioMapper;
 import org.ejercicio.fintechapi.usuario.model.Usuario;
 import org.ejercicio.fintechapi.usuario.repository.UsuarioRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +40,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<UsuarioResponseDTO> findAll() {
-        return usuarioRepository.findAll().stream()
-                .map(usuarioMapper::entityToResponseDTO)
-                .toList();
+    public ResponseDTO<UsuarioResponseDTO> findAll(Pageable page) {
+        Page<Usuario> pagina = usuarioRepository.findAll(page);
+        Page<UsuarioResponseDTO> dtos = pagina.map(usuarioMapper::entityToResponseDTO);
+        return new ResponseDTO<>(dtos.getContent(), dtos.getNumber(), dtos.getSize(), dtos.getTotalElements(), dtos.getTotalPages());
     }
 
     @Override
