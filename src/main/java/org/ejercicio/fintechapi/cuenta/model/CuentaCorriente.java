@@ -22,7 +22,7 @@ public class CuentaCorriente extends Cuenta {
 
     public CuentaCorriente(Usuario titular, String alias, BigDecimal limiteDescubierto) {
         super(titular, alias);
-        this.limiteDescubierto = limiteDescubierto;
+        this.limiteDescubierto = limiteDescubierto != null ? limiteDescubierto : BigDecimal.ZERO;
     }
 
     @Override
@@ -30,4 +30,8 @@ public class CuentaCorriente extends Cuenta {
 
         return getSaldo().add(limiteDescubierto).compareTo(monto) >= 0;
     }
+
+    @Override
+    public TipoDeCuenta getTipoDeCuenta() {
+        return TipoDeCuenta.CORRIENTE;}
 }

@@ -22,4 +22,8 @@ public class CajaAhorro extends Cuenta {
 
         return getSaldo().compareTo(monto) >= 0;
     }
+
+    @Override
+    public TipoDeCuenta getTipoDeCuenta() {
+        return TipoDeCuenta.AHORRO;}
 }

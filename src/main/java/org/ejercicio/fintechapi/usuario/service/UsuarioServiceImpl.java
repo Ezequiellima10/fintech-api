@@ -1,7 +1,7 @@
 package org.ejercicio.fintechapi.usuario.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ejercicio.fintechapi.shared.dto.ResponseDTO;
+import org.ejercicio.fintechapi.shared.dto.ResponsePageDTO;
 import org.ejercicio.fintechapi.usuario.dtos.UsuarioRequestDTO;
 import org.ejercicio.fintechapi.usuario.dtos.UsuarioResponseDTO;
 import org.ejercicio.fintechapi.usuario.exceptions.UsuarioNoEncontradoException;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +39,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public ResponseDTO<UsuarioResponseDTO> findAll(Pageable page) {
+    public ResponsePageDTO<UsuarioResponseDTO> findAll(Pageable page) {
         Page<Usuario> pagina = usuarioRepository.findAll(page);
         Page<UsuarioResponseDTO> dtos = pagina.map(usuarioMapper::entityToResponseDTO);
-        return new ResponseDTO<>(dtos.getContent(), dtos.getNumber(), dtos.getSize(), dtos.getTotalElements(), dtos.getTotalPages());
+        return new ResponsePageDTO<>(dtos.getContent(), dtos.getNumber(), dtos.getSize(), dtos.getTotalElements(), dtos.getTotalPages());
     }
 
     @Override

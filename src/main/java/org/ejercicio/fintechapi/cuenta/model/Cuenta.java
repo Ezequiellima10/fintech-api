@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.ejercicio.fintechapi.cuenta.exceptions.MontoInvalidoException;
 import org.ejercicio.fintechapi.cuenta.exceptions.SaldoInsuficienteException;
 import org.ejercicio.fintechapi.usuario.model.Usuario;
 
@@ -39,6 +40,7 @@ public abstract class Cuenta {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
+
     protected Cuenta(Usuario titular, String alias) {
         this.titular = titular;
         this.alias = alias;
@@ -64,9 +66,11 @@ public abstract class Cuenta {
 
     protected abstract boolean puedeExtraer(BigDecimal monto);
 
+    public abstract TipoDeCuenta getTipoDeCuenta();
+
     private void validarMonto(BigDecimal monto) {
         if (monto == null || monto.signum() <= 0) {
-            throw new IllegalArgumentException("El monto debe ser mayor a cero");
+            throw new MontoInvalidoException("El monto debe ser mayor a cero");
         }
     }
 }

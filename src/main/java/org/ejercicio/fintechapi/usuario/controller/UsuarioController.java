@@ -2,7 +2,7 @@ package org.ejercicio.fintechapi.usuario.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ejercicio.fintechapi.shared.dto.ResponseDTO;
+import org.ejercicio.fintechapi.shared.dto.ResponsePageDTO;
 import org.ejercicio.fintechapi.usuario.dtos.UsuarioRequestDTO;
 import org.ejercicio.fintechapi.usuario.dtos.UsuarioResponseDTO;
 import org.ejercicio.fintechapi.usuario.service.UsuarioService;
@@ -20,8 +20,8 @@ public class UsuarioController {
 
 
     @GetMapping(path = "/usuarios/{id}")
-    public UsuarioResponseDTO getUsuario(@PathVariable Long id){
-        return usuarioService.findByIdDto(id);
+    public ResponseEntity<UsuarioResponseDTO> getUsuario(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.findByIdDto(id));
     }
 
     @PostMapping (path = "/usuarios")
@@ -30,7 +30,7 @@ public class UsuarioController {
     }
 
     @GetMapping(path = "/usuarios")
-    public ResponseEntity<ResponseDTO<UsuarioResponseDTO>> findAll(Pageable page) {
+    public ResponseEntity<ResponsePageDTO<UsuarioResponseDTO>> findAll(Pageable page) {
         return ResponseEntity.ok(usuarioService.findAll(page));
     }
 }
