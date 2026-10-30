@@ -13,7 +13,7 @@ public record CuentaRequestDTO(
         Long titularId,
 
         @NotBlank(message = "El Alias no puede quedar vacio")
-        @Size(min = 5, max = 20, message = "El Alias debe tener un minimo de {min} caracteres y maximo de {max}")
+        @Size(min = 5, max = 50, message = "El Alias debe tener un minimo de {min} caracteres y maximo de {max}")
         String alias,
 
         @NotNull(message = "El tipoDeCuenta no puede ser nulo" )
