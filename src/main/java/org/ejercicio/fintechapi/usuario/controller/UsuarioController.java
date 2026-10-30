@@ -19,15 +19,18 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
 
+
     @GetMapping(path = "/usuarios/{id}")
     public ResponseEntity<UsuarioResponseDTO> getUsuario(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.findByIdDto(id));
+        return ResponseEntity.ok(usuarioService.findByIdDto(id));
     }
+
 
     @PostMapping (path = "/usuarios")
     public ResponseEntity<UsuarioResponseDTO> createUsuario(@Valid @RequestBody UsuarioRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.create(request));
     }
+
 
     @GetMapping(path = "/usuarios")
     public ResponseEntity<ResponsePageDTO<UsuarioResponseDTO>> findAll(Pageable page) {

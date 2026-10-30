@@ -1,5 +1,7 @@
 package org.ejercicio.fintechapi.shared;
 
+import org.ejercicio.fintechapi.cuenta.exceptions.CuentaNoEncontradaException;
+import org.ejercicio.fintechapi.cuenta.exceptions.CuentaYaExisteException;
 import org.ejercicio.fintechapi.shared.dto.ExceptionResponseDTO;
 import org.ejercicio.fintechapi.shared.dto.ExceptionResponseFieldsDTO;
 import org.ejercicio.fintechapi.usuario.exceptions.UsuarioNoEncontradoException;
@@ -26,6 +28,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsuarioYaExisteException.class)
     public ResponseEntity<ExceptionResponseDTO> handleUsuarioDuplicado(UsuarioYaExisteException u){
         ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.CONFLICT.value() , LocalDateTime.now(), u.getMessage());
+        return  ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(CuentaNoEncontradaException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleCuentaNoEncontrada(CuentaNoEncontradaException c){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.NOT_FOUND.value() , LocalDateTime.now(), c.getMessage());
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(CuentaYaExisteException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleCuentaDuplicada(CuentaYaExisteException c){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.CONFLICT.value() , LocalDateTime.now(), c.getMessage());
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDto);
     }
 

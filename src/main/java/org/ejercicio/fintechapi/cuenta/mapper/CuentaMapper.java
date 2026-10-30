@@ -18,6 +18,7 @@ public class CuentaMapper {
                                             .saldo(cuenta.getSaldo())
                                             .limiteDescubierto(limiteDescubierto)
                                             .titularId(cuenta.getTitular().getId())
+                                            .fechaCreacion(cuenta.getFechaCreacion())
                                             .build();
     }
 }
