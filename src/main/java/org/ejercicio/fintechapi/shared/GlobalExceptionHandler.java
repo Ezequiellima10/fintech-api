@@ -1,5 +1,6 @@
 package org.ejercicio.fintechapi.shared;
 
+import org.ejercicio.fintechapi.cotizacion.exceptions.CotizacionNoDisponibleException;
 import org.ejercicio.fintechapi.cuenta.exceptions.CuentaNoEncontradaException;
 import org.ejercicio.fintechapi.cuenta.exceptions.CuentaYaExisteException;
 import org.ejercicio.fintechapi.shared.dto.ExceptionResponseDTO;
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponseDTO> handleCuentaDuplicada(CuentaYaExisteException c){
         ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.CONFLICT.value() , LocalDateTime.now(), c.getMessage());
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(CotizacionNoDisponibleException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleCotizacionNoDisponible(CotizacionNoDisponibleException c){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.SERVICE_UNAVAILABLE.value() , LocalDateTime.now(), c.getMessage());
+        return  ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(exceptionResponseDto);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
