@@ -1,0 +1,559 @@
+{
+  "info": {
+    "_postman_id": "94634fa1-7af7-45e6-a2c9-444c10f9b734",
+    "name": "Fintech API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59356013",
+    "_collection_link": "https://go.postman.co/collection/59356013-94634fa1-7af7-45e6-a2c9-444c10f9b734?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Usuario",
+      "item": [
+        {
+          "name": "Casos de error",
+          "item": [
+            {
+              "name": "Crear usuario invalido (400)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombreUsuario\": \"\",\n  \"email\": \"usuario\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/usuarios",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "usuarios"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Crear usuario repetido (409)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombreUsuario\": \"Messi\",\n  \"email\": \"Messi@gmail.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/usuarios",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "usuarios"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener usuario inexistente (404)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/usuarios/99",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "usuarios",
+                    "99"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Crear Usuario (201)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreUsuario\": \"Messi\",\n  \"email\": \"Messi@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/usuarios",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Usuarios (200)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/usuarios?page=0&size=3",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Usuario por id (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/usuarios/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cotizacion Dolar",
+      "item": [
+        {
+          "name": "Cotizar (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/cotizaciones/dolar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cotizaciones",
+                "dolar"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cuenta",
+      "item": [
+        {
+          "name": "Casos de error",
+          "item": [
+            {
+              "name": "Obtener cuenta inexistente (404)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/cuentas/99",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas",
+                    "99"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Crear cuenta alias repetido (409)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titularId\": 2,\n  \"alias\": \"mi.cuenta.ahorro\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/cuentas",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Crear cuenta titular inexistente (404)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titularId\": \"99\",\n  \"alias\": \"azul.mp.titular.inexistente\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/cuentas",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Crear cuenta invalida (400)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titularId\": 2,\n  \"alias\": \"123\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/cuentas",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar alias repetido (409)",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alias\": \"mi.cuenta.ahorro\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/cuentas/2",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar cuenta invalida (400)",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alias\": \"122\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/cuentas/2",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar cuenta inexistente (404)",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alias\": \"nuevo.alias.actualizado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/cuentas/99",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas",
+                    "99"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar cuenta inexistente (404)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/cuentas/99",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "cuentas",
+                    "99"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Obtener cuentas (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/cuentas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cuentas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear cuenta ahorro (201)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titularId\": 1,\n  \"alias\": \"azul.mp.nueva.ahorro\",\n  \"tipoDeCuenta\": \"AHORRO\",\n  \"limiteDescubierto\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/cuentas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cuentas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear cuenta corriente (201) Copy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titularId\": 2,\n  \"alias\": \"azul.mp.estrella\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/cuentas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cuentas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener cuenta por id (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/cuentas/2",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cuentas",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar cuenta (200)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alias\": \"nuevo.alias.actualizado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/cuentas/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cuentas",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar cuenta (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/cuentas/3",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "cuentas",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
