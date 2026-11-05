@@ -12,9 +12,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +43,12 @@ public class AccountController {
     @ApiResponse(responseCode = "409", description = "Ya existe una cuenta con ese alias")
     @PostMapping(path = "/api/accounts")
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(request));
+        AccountResponseDTO response = accountService.create(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/accounts/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
     }
 
     @Operation(summary = "Busca todas las cuentas")
