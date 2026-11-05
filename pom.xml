@@ -8,7 +8,7 @@
         <version>4.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.ejercicio</groupId>
+    <groupId>io.github.ezequiellima10</groupId>
     <artifactId>fintech-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>fintech-api</name>

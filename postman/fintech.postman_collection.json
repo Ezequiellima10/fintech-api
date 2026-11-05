@@ -20,7 +20,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"nombreUsuario\": \"\",\n  \"email\": \"usuario\"\n}",
+                  "raw": "{\n  \"username\": \"\",\n  \"email\": \"usuario\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -28,12 +28,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/usuarios",
+                  "raw": "{{url}}/api/users",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "usuarios"
+                    "api",
+                    "users"
                   ]
                 }
               },
@@ -46,7 +47,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"nombreUsuario\": \"Messi\",\n  \"email\": \"Messi@gmail.com\"\n}",
+                  "raw": "{\n  \"username\": \"Messi\",\n  \"email\": \"Messi@gmail.com\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -54,12 +55,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/usuarios",
+                  "raw": "{{url}}/api/users",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "usuarios"
+                    "api",
+                    "users"
                   ]
                 }
               },
@@ -71,12 +73,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{url}}/usuarios/99",
+                  "raw": "{{url}}/api/users/99",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "usuarios",
+                    "api",
+                    "users",
                     "99"
                   ]
                 }
@@ -92,7 +95,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombreUsuario\": \"Messi\",\n  \"email\": \"Messi@gmail.com\"\n}",
+              "raw": "{\n  \"username\": \"Messi\",\n  \"email\": \"Messi@gmail.com\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -100,12 +103,13 @@
               }
             },
             "url": {
-              "raw": "{{url}}/usuarios",
+              "raw": "{{url}}/api/users",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "usuarios"
+                "api",
+                "users"
               ]
             }
           },
@@ -124,12 +128,13 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{url}}/usuarios?page=0&size=3",
+              "raw": "{{url}}/api/users?page=0&size=3",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "usuarios"
+                "api",
+                "users"
               ],
               "query": [
                 {
@@ -151,12 +156,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/usuarios/1",
+              "raw": "{{url}}/api/users/1",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "usuarios",
+                "api",
+                "users",
                 "1"
               ]
             }
@@ -174,13 +180,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/cotizaciones/dolar",
+              "raw": "{{url}}/api/exchange-rates/usd",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cotizaciones",
-                "dolar"
+                "api",
+                "exchange-rates",
+                "usd"
               ]
             }
           },
@@ -200,12 +207,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{url}}/cuentas/99",
+                  "raw": "{{url}}/api/accounts/99",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas",
+                    "api",
+                    "accounts",
                     "99"
                   ]
                 }
@@ -219,7 +227,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"titularId\": 2,\n  \"alias\": \"mi.cuenta.ahorro\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+                  "raw": "{\n  \"holderId\": 2,\n  \"alias\": \"mi.cuenta.ahorro\",\n  \"accountType\": \"CHECKING\",\n  \"overdraftLimit\": 10000\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -227,12 +235,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/cuentas",
+                  "raw": "{{url}}/api/accounts",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas"
+                    "api",
+                    "accounts"
                   ]
                 }
               },
@@ -245,7 +254,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"titularId\": \"99\",\n  \"alias\": \"azul.mp.titular.inexistente\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+                  "raw": "{\n  \"holderId\": \"99\",\n  \"alias\": \"azul.mp.titular.inexistente\",\n  \"accountType\": \"CHECKING\",\n  \"overdraftLimit\": 10000\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -253,12 +262,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/cuentas",
+                  "raw": "{{url}}/api/accounts",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas"
+                    "api",
+                    "accounts"
                   ]
                 }
               },
@@ -271,7 +281,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"titularId\": 2,\n  \"alias\": \"123\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+                  "raw": "{\n  \"holderId\": 2,\n  \"alias\": \"123\",\n  \"accountType\": \"CHECKING\",\n  \"overdraftLimit\": 10000\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -279,12 +289,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/cuentas",
+                  "raw": "{{url}}/api/accounts",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas"
+                    "api",
+                    "accounts"
                   ]
                 }
               },
@@ -305,12 +316,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/cuentas/2",
+                  "raw": "{{url}}/api/accounts/2",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas",
+                    "api",
+                    "accounts",
                     "2"
                   ]
                 }
@@ -332,12 +344,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/cuentas/2",
+                  "raw": "{{url}}/api/accounts/2",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas",
+                    "api",
+                    "accounts",
                     "2"
                   ]
                 }
@@ -359,12 +372,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/cuentas/99",
+                  "raw": "{{url}}/api/accounts/99",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas",
+                    "api",
+                    "accounts",
                     "99"
                   ]
                 }
@@ -377,12 +391,13 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{url}}/cuentas/99",
+                  "raw": "{{url}}/api/accounts/99",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "cuentas",
+                    "api",
+                    "accounts",
                     "99"
                   ]
                 }
@@ -397,12 +412,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/cuentas",
+              "raw": "{{url}}/api/accounts",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cuentas"
+                "api",
+                "accounts"
               ]
             }
           },
@@ -415,7 +431,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titularId\": 1,\n  \"alias\": \"azul.mp.nueva.ahorro\",\n  \"tipoDeCuenta\": \"AHORRO\",\n  \"limiteDescubierto\": 0\n}",
+              "raw": "{\n  \"holderId\": 1,\n  \"alias\": \"azul.mp.nueva.ahorro\",\n  \"accountType\": \"SAVINGS\",\n  \"overdraftLimit\": 0\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -423,12 +439,13 @@
               }
             },
             "url": {
-              "raw": "{{url}}/cuentas",
+              "raw": "{{url}}/api/accounts",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cuentas"
+                "api",
+                "accounts"
               ]
             }
           },
@@ -441,7 +458,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titularId\": 2,\n  \"alias\": \"azul.mp.estrella\",\n  \"tipoDeCuenta\": \"CORRIENTE\",\n  \"limiteDescubierto\": 10000\n}",
+              "raw": "{\n  \"holderId\": 2,\n  \"alias\": \"azul.mp.estrella\",\n  \"accountType\": \"CHECKING\",\n  \"overdraftLimit\": 10000\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -449,12 +466,13 @@
               }
             },
             "url": {
-              "raw": "{{url}}/cuentas",
+              "raw": "{{url}}/api/accounts",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cuentas"
+                "api",
+                "accounts"
               ]
             }
           },
@@ -466,12 +484,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/cuentas/2",
+              "raw": "{{url}}/api/accounts/2",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cuentas",
+                "api",
+                "accounts",
                 "2"
               ]
             }
@@ -493,12 +512,13 @@
               }
             },
             "url": {
-              "raw": "{{url}}/cuentas/1",
+              "raw": "{{url}}/api/accounts/1",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cuentas",
+                "api",
+                "accounts",
                 "1"
               ]
             }
@@ -511,12 +531,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url}}/cuentas/3",
+              "raw": "{{url}}/api/accounts/3",
               "host": [
                 "{{url}}"
               ],
               "path": [
-                "cuentas",
+                "api",
+                "accounts",
                 "3"
               ]
             }
