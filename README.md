@@ -84,32 +84,32 @@ La aplicación queda disponible en `http://localhost:8080`.
 Swagger: http://localhost:8080/swagger-ui/index.html
 
 ## Modelo
-- `Usuario` (1) —— (N) `Cuenta`
-- `Cuenta` es una clase abstracta. Sus hijas son `CajaAhorro` y `CuentaCorriente`.
-- `CajaAhorro` no puede quedar con saldo negativo.
-- `CuentaCorriente` puede extraer hasta su `limiteDescubierto`.
+- `User` (1) —— (N) `Account`
+- `Account` es una clase abstracta. Sus hijas son `SavingsAccount` (caja de ahorro) y `CheckingAccount` (cuenta corriente).
+- `SavingsAccount` no puede quedar con saldo negativo.
+- `CheckingAccount` puede extraer hasta su `overdraftLimit` (límite de descubierto).
 
 ## Estructura
 Monolito modular organizado por funcionalidad:
 
-- `usuario`: usuarios.
-- `cuenta`: cuentas. Depende de `usuario` a través de su service.
-- `cotizacion`: consumo de la API externa dolarapi.
+- `user`: usuarios.
+- `account`: cuentas. Depende de `user` a través de su service.
+- `exchangerate`: consumo de la API externa dolarapi.
 - `shared`: manejo global de excepciones y DTOs compartidos.
 
 ## Endpoints
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | /cuentas | Lista las cuentas de forma paginada |
-| POST | /cuentas | Crea una cuenta |
-| GET | /cuentas/{id} | Busca una cuenta por id |
-| PUT | /cuentas/{id} | Actualiza el alias de una cuenta |
-| DELETE | /cuentas/{id} | Elimina una cuenta |
-| GET | /usuarios | Lista los usuarios de forma paginada |
-| POST | /usuarios | Crea un usuario |
-| GET | /usuarios/{id} | Busca un usuario por id |
-| GET | /cotizaciones/dolar | Devuelve la cotización del dólar |
+| GET | /api/accounts | Lista las cuentas de forma paginada |
+| POST | /api/accounts | Crea una cuenta |
+| GET | /api/accounts/{id} | Busca una cuenta por id |
+| PUT | /api/accounts/{id} | Actualiza el alias de una cuenta |
+| DELETE | /api/accounts/{id} | Elimina una cuenta |
+| GET | /api/users | Lista los usuarios de forma paginada |
+| POST | /api/users | Crea un usuario |
+| GET | /api/users/{id} | Busca un usuario por id |
+| GET | /api/exchange-rates/usd | Devuelve la cotización del dólar |
 
 ## Tests
 Son tests unitarios con JUnit 5 y Mockito, y no necesitan MySQL.
@@ -129,11 +129,11 @@ necesitan datos previos.
 
 ## Decisiones
 - **Herencia:** `SINGLE_TABLE`, porque las dos cuentas comparten casi todos sus datos.
-- **Creación de cuentas:** un solo `POST /cuentas`, con `tipoDeCuenta` para elegir la hija.
+- **Creación de cuentas:** un solo `POST /api/accounts`, con `accountType` para elegir la hija.
 - **DTOs:** la API no expone las entidades.
 - **Errores:** `GlobalExceptionHandler` los centraliza y evita repetir `try/catch`.
 - **API externa:** usa `try/catch`, porque puede fallar. Si falla, responde 503.
 - **Dinero:** `BigDecimal`, para evitar errores de redondeo.
 - **Reglas en la entidad:** cada tipo de cuenta decide cuánto se puede extraer.
 - **Contraseña:** se pasa por variable de entorno y no queda en el repo.
-- **`limiteDescubierto`:** solo se usa en `CORRIENTE`.
+- **`overdraftLimit`:** solo se usa en `CHECKING`.
