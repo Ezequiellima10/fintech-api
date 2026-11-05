@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="transactions")
+@Table(name="transactions", indexes = @Index(name="idx_transactions_account_id", columnList = "account_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Immutable
