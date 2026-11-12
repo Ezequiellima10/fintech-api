@@ -6,6 +6,7 @@ import io.github.ezequiellima10.fintech.account.dto.AccountResponseDTO;
 import io.github.ezequiellima10.fintech.shared.dto.ResponsePageDTO;
 import org.springframework.data.domain.Pageable;
 
+
 public interface AccountService {
 
     AccountResponseDTO create(AccountRequestDTO accountRequestDTO);

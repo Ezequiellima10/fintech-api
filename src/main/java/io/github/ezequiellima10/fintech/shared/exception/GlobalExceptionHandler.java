@@ -2,6 +2,8 @@ package io.github.ezequiellima10.fintech.shared.exception;
 
 import io.github.ezequiellima10.fintech.account.exception.AccountAlreadyExistsException;
 import io.github.ezequiellima10.fintech.account.exception.AccountNotFoundException;
+import io.github.ezequiellima10.fintech.account.exception.InsufficientFundsException;
+import io.github.ezequiellima10.fintech.account.exception.InvalidAmountException;
 import io.github.ezequiellima10.fintech.exchangerate.exception.ExchangeRateUnavailableException;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseDTO;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseFieldsDTO;
@@ -44,6 +46,18 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDto);
     }
 
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleInsufficientFunds(InsufficientFundsException i){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.UNPROCESSABLE_CONTENT.value() , LocalDateTime.now(), i.getMessage());
+        return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(InvalidAmountException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleInvalidAmount(InvalidAmountException i){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.UNPROCESSABLE_CONTENT.value() , LocalDateTime.now(), i.getMessage());
+        return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(exceptionResponseDto);
+    }
+
     @ExceptionHandler(ExchangeRateUnavailableException.class)
     public ResponseEntity<ExceptionResponseDTO> handleExchangeRateUnavailable(ExchangeRateUnavailableException e){
         ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.SERVICE_UNAVAILABLE.value() , LocalDateTime.now(), e.getMessage());
@@ -55,6 +69,8 @@ public class GlobalExceptionHandler {
         ExceptionResponseFieldsDTO exceptionResponseFieldsDTO = new ExceptionResponseFieldsDTO(LocalDateTime.now(), ex.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getField() + ":" + fieldError.getDefaultMessage()).toList());
         return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseFieldsDTO);
     }
+
+
 }
 
 
