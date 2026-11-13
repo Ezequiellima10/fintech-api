@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService, AccountTransactionSer
     @Transactional
     @Override
     public AccountResponseDTO deposit(Long accountId, BigDecimal amount) {
-        Account account = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
+        Account account = accountRepository.findWithLockById(accountId).orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
 
         account.deposit(amount);
 
@@ -43,7 +43,7 @@ public class AccountServiceImpl implements AccountService, AccountTransactionSer
     @Override
     public AccountResponseDTO withdraw(Long accountId, BigDecimal amount) {
 
-        Account account = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
+        Account account = accountRepository.findWithLockById(accountId).orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
 
         account.withdraw(amount);
 
