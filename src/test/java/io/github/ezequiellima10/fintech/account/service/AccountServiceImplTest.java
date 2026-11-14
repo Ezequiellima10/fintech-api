@@ -220,4 +220,20 @@ class AccountServiceImplTest {
 
         verify(accountRepository, never()).deleteById(any());
     }
+
+
+    @Test
+    void deposit_existingAccount_increasesBalance(){
+        //given
+        SavingsAccount savings = new SavingsAccount(holder, "caja.uno");
+        AccountResponseDTO expectedResponse =  AccountResponseDTO.builder().alias("caja.uno").build();
+
+        when(accountRepository.findWithLockById(10L)).thenReturn(Optional.of(savings));
+        when(accountMapper.entityToResponseDTO(savings)).thenReturn(expectedResponse);
+        //when
+        AccountResponseDTO result = accountService.deposit(10L, new BigDecimal("1000"));
+        //then
+        assertEquals(new BigDecimal("1000"), savings.getBalance());
+        assertEquals(expectedResponse, result);
+    }
 }
