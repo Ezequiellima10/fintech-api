@@ -1,9 +1,11 @@
 package io.github.ezequiellima10.fintech.shared.exception;
 
 import io.github.ezequiellima10.fintech.account.exception.AccountAlreadyExistsException;
+import io.github.ezequiellima10.fintech.account.exception.AccountClosedException;
 import io.github.ezequiellima10.fintech.account.exception.AccountNotFoundException;
 import io.github.ezequiellima10.fintech.account.exception.InsufficientFundsException;
 import io.github.ezequiellima10.fintech.account.exception.InvalidAmountException;
+import io.github.ezequiellima10.fintech.account.exception.NonZeroBalanceException;
 import io.github.ezequiellima10.fintech.exchangerate.exception.ExchangeRateUnavailableException;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseDTO;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseFieldsDTO;
@@ -70,6 +72,17 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseFieldsDTO);
     }
 
+    @ExceptionHandler(AccountClosedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAccountClosed(AccountClosedException a){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.CONFLICT.value() , LocalDateTime.now(), a.getMessage());
+        return  ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(NonZeroBalanceException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleNonZeroBalance(NonZeroBalanceException n){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.UNPROCESSABLE_CONTENT.value() , LocalDateTime.now(), n.getMessage());
+        return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(exceptionResponseDto);
+    }
 
 }
 

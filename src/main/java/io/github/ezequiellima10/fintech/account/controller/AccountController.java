@@ -70,9 +70,10 @@ public class AccountController {
     }
 
 
-    @Operation(summary = "Elimina una cuenta por id")
-    @ApiResponse(responseCode = "204", description = "Cuenta eliminada")
+    @Operation(summary = "Cierra una cuenta por id", description = "Cierre lógico: la cuenta y su historial de movimientos se conservan. Solo se puede cerrar con saldo cero")
+    @ApiResponse(responseCode = "204", description = "Cuenta cerrada")
     @ApiResponse(responseCode = "404", description = "No existe una cuenta con ese id")
+    @ApiResponse(responseCode = "422", description = "La cuenta tiene saldo distinto de cero")
     @DeleteMapping(path = "/api/accounts/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.delete(id);

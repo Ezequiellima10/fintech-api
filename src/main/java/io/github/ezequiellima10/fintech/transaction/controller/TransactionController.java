@@ -28,6 +28,7 @@ public class TransactionController {
     @ApiResponse(responseCode = "201", description = "Depósito confirmado")
     @ApiResponse(responseCode = "400", description = "Datos inválidos")
     @ApiResponse(responseCode = "404", description = "No existe la cuenta")
+    @ApiResponse(responseCode = "409", description = "La cuenta está cerrada")
     @PostMapping(path = "/api/accounts/{accountId}/deposit")
     public ResponseEntity<TransactionResponseDTO> deposit(@Valid @RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable Long accountId) {
         TransactionResponseDTO responseDTO = transactionService.deposit(transactionRequestDTO, accountId);
@@ -43,6 +44,7 @@ public class TransactionController {
     @ApiResponse(responseCode = "201", description = "Extracción confirmada")
     @ApiResponse(responseCode = "400", description = "Datos inválidos")
     @ApiResponse(responseCode = "404", description = "No existe la cuenta")
+    @ApiResponse(responseCode = "409", description = "La cuenta está cerrada")
     @ApiResponse(responseCode = "422", description = "Fondos insuficientes")
     @PostMapping(path = "/api/accounts/{accountId}/withdraw")
     public ResponseEntity<TransactionResponseDTO> withdraw(@Valid @RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable Long accountId) {
