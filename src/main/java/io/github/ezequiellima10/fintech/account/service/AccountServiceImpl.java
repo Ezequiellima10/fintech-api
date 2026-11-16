@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService, AccountTransactionService {
@@ -32,7 +33,8 @@ public class AccountServiceImpl implements AccountService, AccountTransactionSer
     @Transactional
     @Override
     public AccountResponseDTO deposit(Long accountId, BigDecimal amount) {
-        Account account = accountRepository.findWithLockById(accountId).orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
+        Account account = accountRepository.findWithLockById(accountId)
+                .orElseThrow(()-> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
 
         account.deposit(amount);
 
@@ -101,9 +103,8 @@ public class AccountServiceImpl implements AccountService, AccountTransactionSer
     @Override
     public void delete(Long id) {
 
-        if (!accountRepository.existsById(id)) {
-            throw new AccountNotFoundException("No existe la cuenta con el id: " + id);
-        }
-        accountRepository.deleteById(id);
+        Account accountToClose = accountRepository.findWithLockById(id).orElseThrow(()-> new AccountNotFoundException("No existe la cuenta con el id: " + id));
+
+        accountToClose.close();
     }
 }
