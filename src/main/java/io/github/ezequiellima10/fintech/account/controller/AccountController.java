@@ -12,9 +12,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +43,12 @@ public class AccountController {
     @ApiResponse(responseCode = "409", description = "Ya existe una cuenta con ese alias")
     @PostMapping(path = "/api/accounts")
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(request));
+        AccountResponseDTO response = accountService.create(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/accounts/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
     }
 
     @Operation(summary = "Busca todas las cuentas")
@@ -63,9 +70,10 @@ public class AccountController {
     }
 
 
-    @Operation(summary = "Elimina una cuenta por id")
-    @ApiResponse(responseCode = "204", description = "Cuenta eliminada")
+    @Operation(summary = "Cierra una cuenta por id", description = "Cierre lógico: la cuenta y su historial de movimientos se conservan. Solo se puede cerrar con saldo cero")
+    @ApiResponse(responseCode = "204", description = "Cuenta cerrada")
     @ApiResponse(responseCode = "404", description = "No existe una cuenta con ese id")
+    @ApiResponse(responseCode = "422", description = "La cuenta tiene saldo distinto de cero")
     @DeleteMapping(path = "/api/accounts/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.delete(id);

@@ -11,9 +11,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 
 @RestController
@@ -40,7 +42,12 @@ public class UserController {
     @ApiResponse(responseCode = "409", description = "Ya existe un usuario con ese email o nombre de usuario")
     @PostMapping (path = "/api/users")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
+        UserResponseDTO response = userService.create(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/users/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
     }
 
 

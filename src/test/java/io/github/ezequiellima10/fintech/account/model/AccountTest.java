@@ -1,7 +1,9 @@
 package io.github.ezequiellima10.fintech.account.model;
 
+import io.github.ezequiellima10.fintech.account.exception.AccountClosedException;
 import io.github.ezequiellima10.fintech.account.exception.InsufficientFundsException;
 import io.github.ezequiellima10.fintech.account.exception.InvalidAmountException;
+import io.github.ezequiellima10.fintech.account.exception.NonZeroBalanceException;
 import io.github.ezequiellima10.fintech.user.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -74,5 +76,29 @@ class AccountTest {
         assertThrows(InvalidAmountException.class, () -> account.deposit(BigDecimal.ZERO));
 
         assertEquals(BigDecimal.ZERO, account.getBalance());
+    }
+
+    @Test
+    void deposit_closedAccount_throwsAccountClosedException() {
+        // given
+        Account account = new SavingsAccount(holder, "mi.caja");
+        account.close();
+
+        // when / then
+        assertThrows(AccountClosedException.class, () -> account.deposit(new BigDecimal("100")));
+
+        assertEquals(BigDecimal.ZERO, account.getBalance());
+    }
+
+    @Test
+    void close_nonZeroBalance_throwsNonZeroBalanceException() {
+        // given
+        Account account = new SavingsAccount(holder, "mi.caja");
+        account.deposit(new BigDecimal("100"));
+
+        // when / then
+        assertThrows(NonZeroBalanceException.class, account::close);
+
+        assertTrue(account.isActive());
     }
 }

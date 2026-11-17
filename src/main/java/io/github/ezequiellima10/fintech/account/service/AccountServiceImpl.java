@@ -19,14 +19,38 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
+
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountService, AccountTransactionService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
     private final UserService userService;
 
+    @Transactional
+    @Override
+    public AccountResponseDTO deposit(Long accountId, BigDecimal amount) {
+        Account account = accountRepository.findWithLockById(accountId)
+                .orElseThrow(()-> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
+
+        account.deposit(amount);
+
+        return accountMapper.entityToResponseDTO(account);
+    }
+
+    @Transactional
+    @Override
+    public AccountResponseDTO withdraw(Long accountId, BigDecimal amount) {
+
+        Account account = accountRepository.findWithLockById(accountId).orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
+
+        account.withdraw(amount);
+
+        return accountMapper.entityToResponseDTO(account);
+    }
 
     @Override
     @Transactional
@@ -59,9 +83,8 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.entityToResponseDTO((accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("No existe la cuenta con el id: " + id))));
     }
 
-
-    @Override
     @Transactional
+    @Override
     public AccountResponseDTO update(Long id, AccountRequestUpdateDTO dto) {
 
         Account account = accountRepository.findById(id)
@@ -76,14 +99,12 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.entityToResponseDTO(account);
     }
 
-
-    @Override
     @Transactional
+    @Override
     public void delete(Long id) {
 
-        if (!accountRepository.existsById(id)) {
-            throw new AccountNotFoundException("No existe la cuenta con el id: " + id);
-        }
-        accountRepository.deleteById(id);
+        Account accountToClose = accountRepository.findWithLockById(id).orElseThrow(()-> new AccountNotFoundException("No existe la cuenta con el id: " + id));
+
+        accountToClose.close();
     }
 }

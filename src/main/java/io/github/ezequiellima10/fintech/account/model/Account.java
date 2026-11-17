@@ -1,7 +1,9 @@
 package io.github.ezequiellima10.fintech.account.model;
 
+import io.github.ezequiellima10.fintech.account.exception.AccountClosedException;
 import io.github.ezequiellima10.fintech.account.exception.InsufficientFundsException;
 import io.github.ezequiellima10.fintech.account.exception.InvalidAmountException;
+import io.github.ezequiellima10.fintech.account.exception.NonZeroBalanceException;
 import io.github.ezequiellima10.fintech.user.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,6 +40,11 @@ public abstract class Account {
     @Column(nullable = false, unique = true)
     private String alias;
 
+    @ColumnDefault("true")
+    @Column(nullable = false)
+    private boolean active = true;
+
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -52,16 +60,36 @@ public abstract class Account {
     }
 
     public void deposit(BigDecimal amount) {
+        ensureActive();
         validateAmount(amount);
-        balance = balance.add(amount);
+
+            balance = balance.add(amount);
     }
 
     public void withdraw(BigDecimal amount) {
+        ensureActive();
         validateAmount(amount);
+
         if (!canWithdraw(amount)) {
             throw new InsufficientFundsException("Saldo insuficiente");
         }
-        balance = balance.subtract(amount);
+
+            balance = balance.subtract(amount);
+    }
+
+    public void close() {
+
+       if (this.balance.signum() != 0){
+           throw new NonZeroBalanceException("El saldo tiene que estar en cero para desactivar la cuenta");
+       }
+       this.active = false;
+    }
+
+    private void ensureActive() {
+
+        if (!this.active) {
+            throw new AccountClosedException("La cuenta esta desactivada");
+        }
     }
 
     protected abstract boolean canWithdraw(BigDecimal amount);

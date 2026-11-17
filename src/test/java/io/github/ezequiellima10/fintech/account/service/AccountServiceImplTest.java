@@ -199,25 +199,68 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void delete_existing_deletesAccount() {
+    void delete_existingWithZeroBalance_closesAccount() {
         // given
-        when(accountRepository.existsById(10L)).thenReturn(true);
+        SavingsAccount savings = new SavingsAccount(holder, "caja.uno");
+        when(accountRepository.findWithLockById(10L)).thenReturn(Optional.of(savings));
 
         // when
         accountService.delete(10L);
 
         // then
-        verify(accountRepository).deleteById(10L);
+        assertFalse(savings.isActive());
     }
 
     @Test
     void delete_nonexistent_throwsExceptionAndDoesNotDelete() {
         // given
-        when(accountRepository.existsById(99L)).thenReturn(false);
+        when(accountRepository.findWithLockById(99L)).thenReturn(Optional.empty());
 
         // when / then
         assertThrows(AccountNotFoundException.class, () -> accountService.delete(99L));
 
-        verify(accountRepository, never()).deleteById(any());
+    }
+
+
+    @Test
+    void deposit_existingAccount_increasesBalance(){
+        //given
+        SavingsAccount savings = new SavingsAccount(holder, "caja.uno");
+        AccountResponseDTO expectedResponse =  AccountResponseDTO.builder().alias("caja.uno").build();
+
+        when(accountRepository.findWithLockById(10L)).thenReturn(Optional.of(savings));
+        when(accountMapper.entityToResponseDTO(savings)).thenReturn(expectedResponse);
+        //when
+        AccountResponseDTO result = accountService.deposit(10L, new BigDecimal("1000"));
+        //then
+        assertEquals(new BigDecimal("1000"), savings.getBalance());
+        assertEquals(expectedResponse, result);
+    }
+
+    @Test
+    void deposit_nonexistentAccount_throwsAccountNotFoundException() {
+        // given
+        when(accountRepository.findWithLockById(99L)).thenReturn(Optional.empty());
+
+        // when / then
+        assertThrows(AccountNotFoundException.class, () -> accountService.deposit(99L, new BigDecimal("1000")));
+    }
+
+    @Test
+    void withdraw_existingAccount_decreasesBalance() {
+        // given
+        SavingsAccount savings = new SavingsAccount(holder, "caja.uno");
+        savings.deposit(new BigDecimal("1000"));
+        AccountResponseDTO expectedResponse = AccountResponseDTO.builder().alias("caja.uno").build();
+
+        when(accountRepository.findWithLockById(10L)).thenReturn(Optional.of(savings));
+        when(accountMapper.entityToResponseDTO(savings)).thenReturn(expectedResponse);
+
+        // when
+        AccountResponseDTO result = accountService.withdraw(10L, new BigDecimal("400"));
+
+        // then
+        assertEquals(new BigDecimal("600"), savings.getBalance());
+        assertEquals(expectedResponse, result);
     }
 }
