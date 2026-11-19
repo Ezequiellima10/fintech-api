@@ -53,6 +53,13 @@ public class AccountServiceImpl implements AccountService, AccountTransactionSer
     }
 
     @Override
+    public void existsAccount(Long accountId) {
+        if (!accountRepository.existsById(accountId)) {
+            throw new AccountNotFoundException("No existe el account con el id " + accountId);
+        }
+    }
+
+    @Override
     @Transactional
     public AccountResponseDTO create(AccountRequestDTO accountRequestDTO) {
 

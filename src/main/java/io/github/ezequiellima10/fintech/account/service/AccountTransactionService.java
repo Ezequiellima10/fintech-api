@@ -8,4 +8,5 @@ public interface AccountTransactionService {
 
     AccountResponseDTO deposit(Long accountId, BigDecimal amount);
     AccountResponseDTO withdraw(Long accountId, BigDecimal amount);
+    void existsAccount(Long accountId);
 }
