@@ -1,24 +1,29 @@
 package io.github.ezequiellima10.fintech.transaction.controller;
 
 import io.github.ezequiellima10.fintech.account.exception.InsufficientFundsException;
+import io.github.ezequiellima10.fintech.shared.dto.ResponsePageDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionResponseDTO;
 import io.github.ezequiellima10.fintech.transaction.model.TransactionType;
 import io.github.ezequiellima10.fintech.transaction.service.TransactionService;
+import io.github.ezequiellima10.fintech.transaction.service.TransferService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,6 +38,9 @@ class TransactionControllerTest {
 
     @MockitoBean
     private TransactionService transactionService;
+
+    @MockitoBean
+    private TransferService transferService;
 
 
     @Test
@@ -87,5 +95,24 @@ class TransactionControllerTest {
                                 """))
                 .andExpect(status().isUnprocessableContent())
                 .andExpect(jsonPath("$.errorMessage").value("Saldo insuficiente"));
+    }
+
+    @Test
+    void findTransactionHistory_existingAccount_returns200WithPage() throws Exception {
+        // given
+        TransactionResponseDTO deposit = TransactionResponseDTO.builder()
+                .id(1L)
+                .accountId(10L)
+                .type(TransactionType.DEPOSIT)
+                .build();
+        ResponsePageDTO<TransactionResponseDTO> response = new ResponsePageDTO<>(List.of(deposit), 0, 20, 1, 1);
+
+        when(transactionService.findTransactionHistory(eq(10L), any(Pageable.class))).thenReturn(response);
+
+        // when / then
+        mockMvc.perform(get("/api/accounts/10/transactions"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.dtos[0].id").value(1))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 }

@@ -3,6 +3,7 @@ package io.github.ezequiellima10.fintech.account.service;
 import io.github.ezequiellima10.fintech.account.dto.AccountRequestDTO;
 import io.github.ezequiellima10.fintech.account.dto.AccountRequestUpdateDTO;
 import io.github.ezequiellima10.fintech.account.dto.AccountResponseDTO;
+import io.github.ezequiellima10.fintech.account.dto.TransferBalancesDTO;
 import io.github.ezequiellima10.fintech.account.exception.AccountAlreadyExistsException;
 import io.github.ezequiellima10.fintech.account.exception.AccountNotFoundException;
 import io.github.ezequiellima10.fintech.account.mapper.AccountMapper;
@@ -50,6 +51,33 @@ public class AccountServiceImpl implements AccountService, AccountTransactionSer
         account.withdraw(amount);
 
         return accountMapper.entityToResponseDTO(account);
+    }
+
+    @Override
+    public void existsAccount(Long accountId) {
+        if (!accountRepository.existsById(accountId)) {
+            throw new AccountNotFoundException("No existe el account con el id " + accountId);
+        }
+    }
+
+    @Transactional
+    @Override
+    public TransferBalancesDTO transfer(Long originId, Long destinationId, BigDecimal amount) {
+
+        Account first  = lock(Math.min(originId, destinationId));
+        Account second = lock(Math.max(originId, destinationId));
+        Account origin = first.getId().equals(originId) ? first : second;
+        Account destination = (origin == first) ? second : first;
+
+        origin.withdraw(amount);
+        destination.deposit(amount);
+
+        return new TransferBalancesDTO(accountMapper.entityToResponseDTO(origin), accountMapper.entityToResponseDTO(destination));
+    }
+
+    private Account lock(Long accountId) {
+        return accountRepository.findWithLockById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("No existe una cuenta con el id " + accountId));
     }
 
     @Override

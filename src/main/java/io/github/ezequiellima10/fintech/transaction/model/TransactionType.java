@@ -1,5 +1,5 @@
 package io.github.ezequiellima10.fintech.transaction.model;
 
 public enum TransactionType {
-    DEPOSIT, WITHDRAWAL
-}
+    DEPOSIT, WITHDRAWAL, TRANSFER_OUT, TRANSFER_IN
+    }

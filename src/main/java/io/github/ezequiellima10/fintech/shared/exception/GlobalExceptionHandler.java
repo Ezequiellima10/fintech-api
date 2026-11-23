@@ -9,6 +9,7 @@ import io.github.ezequiellima10.fintech.account.exception.NonZeroBalanceExceptio
 import io.github.ezequiellima10.fintech.exchangerate.exception.ExchangeRateUnavailableException;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseDTO;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseFieldsDTO;
+import io.github.ezequiellima10.fintech.transaction.exception.SameAccountTransferException;
 import io.github.ezequiellima10.fintech.user.exception.UserAlreadyExistsException;
 import io.github.ezequiellima10.fintech.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NonZeroBalanceException.class)
     public ResponseEntity<ExceptionResponseDTO> handleNonZeroBalance(NonZeroBalanceException n){
         ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.UNPROCESSABLE_CONTENT.value() , LocalDateTime.now(), n.getMessage());
+        return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(exceptionResponseDto);
+    }
+
+    @ExceptionHandler(SameAccountTransferException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleSameAccountTransfer(SameAccountTransferException s){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.UNPROCESSABLE_CONTENT.value() , LocalDateTime.now(), s.getMessage());
         return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(exceptionResponseDto);
     }
 
