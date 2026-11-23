@@ -6,6 +6,7 @@ import io.github.ezequiellima10.fintech.transaction.dto.TransactionRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionResponseDTO;
 import io.github.ezequiellima10.fintech.transaction.model.TransactionType;
 import io.github.ezequiellima10.fintech.transaction.service.TransactionService;
+import io.github.ezequiellima10.fintech.transaction.service.TransferService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -37,6 +38,9 @@ class TransactionControllerTest {
 
     @MockitoBean
     private TransactionService transactionService;
+
+    @MockitoBean
+    private TransferService transferService;
 
 
     @Test
