@@ -1,8 +1,10 @@
 package io.github.ezequiellima10.fintech.transaction.service;
 
 import io.github.ezequiellima10.fintech.account.dto.AccountResponseDTO;
+import io.github.ezequiellima10.fintech.account.exception.AccountNotFoundException;
 import io.github.ezequiellima10.fintech.account.exception.InsufficientFundsException;
 import io.github.ezequiellima10.fintech.account.service.AccountTransactionService;
+import io.github.ezequiellima10.fintech.shared.dto.ResponsePageDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionResponseDTO;
 import io.github.ezequiellima10.fintech.transaction.mapper.TransactionMapper;
@@ -15,8 +17,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -108,5 +115,39 @@ class TransactionServiceImplTest {
         assertThrows(InsufficientFundsException.class, () -> transactionService.withdraw(request, 10L));
 
         verify(transactionRepository, never()).save(any());
+    }
+
+    @Test
+    void findTransactionHistory_existingAccount_mapsPageToDtos() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        Transaction deposit = new Transaction(10L, TransactionType.DEPOSIT, new BigDecimal("1000"), new BigDecimal("1000"), null);
+        Page<Transaction> page = new PageImpl<>(List.of(deposit), pageable, 1);
+        TransactionResponseDTO depositDto = TransactionResponseDTO.builder().type(TransactionType.DEPOSIT).build();
+
+        when(transactionRepository.findByAccountIdOrderByCreatedAtDesc(10L, pageable)).thenReturn(page);
+        when(transactionMapper.entityToDto(deposit)).thenReturn(depositDto);
+
+        // when
+        ResponsePageDTO<TransactionResponseDTO> result = transactionService.findTransactionHistory(10L, pageable);
+
+        // then
+        assertEquals(List.of(depositDto), result.dtos());
+        assertEquals(0, result.pageNumber());
+        assertEquals(10, result.pageSize());
+        assertEquals(1, result.totalElements());
+        verify(accountTransactionService).existsAccount(10L);
+    }
+
+    @Test
+    void findTransactionHistory_nonexistentAccount_throwsAccountNotFoundException() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        doThrow(new AccountNotFoundException("No existe la cuenta")).when(accountTransactionService).existsAccount(99L);
+
+        // when / then
+        assertThrows(AccountNotFoundException.class, () -> transactionService.findTransactionHistory(99L, pageable));
+
+        verify(transactionRepository, never()).findByAccountIdOrderByCreatedAtDesc(any(), any());
     }
 }

@@ -1,10 +1,9 @@
 package io.github.ezequiellima10.fintech.transaction.service;
 
+import io.github.ezequiellima10.fintech.shared.dto.ResponsePageDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionResponseDTO;
-import io.github.ezequiellima10.fintech.transaction.model.Transaction;
-
-import java.math.BigDecimal;
+import org.springframework.data.domain.Pageable;
 
 public interface TransactionService {
 
@@ -12,4 +11,5 @@ public interface TransactionService {
 
     TransactionResponseDTO withdraw(TransactionRequestDTO dto, Long accountId);
 
+    ResponsePageDTO<TransactionResponseDTO> findTransactionHistory(Long accountId, Pageable pageable);
 }

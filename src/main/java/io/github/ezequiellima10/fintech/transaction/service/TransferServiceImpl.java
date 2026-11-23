@@ -1,6 +1,6 @@
 package io.github.ezequiellima10.fintech.transaction.service;
 
-import io.github.ezequiellima10.fintech.account.dto.AccountResponseDTO;
+import io.github.ezequiellima10.fintech.account.dto.TransferBalancesDTO;
 import io.github.ezequiellima10.fintech.account.service.AccountTransactionService;
 import io.github.ezequiellima10.fintech.transaction.dto.TransferRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransferResponseDTO;
@@ -12,8 +12,6 @@ import io.github.ezequiellima10.fintech.transaction.repository.TransactionReposi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,18 +25,12 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferResponseDTO transfer(TransferRequestDTO transferRequestDTO) {
         sameAccount(transferRequestDTO.originAccountId(), transferRequestDTO.destinationAccountId());
-        AccountResponseDTO AccountDTOOrigin = accountTransactionService.withdraw(transferRequestDTO.originAccountId(), transferRequestDTO.amount());
-        AccountResponseDTO AccountDTODestination = accountTransactionService.deposit(transferRequestDTO.destinationAccountId(), transferRequestDTO.amount());
+        TransferBalancesDTO balances = accountTransactionService.transfer(transferRequestDTO.originAccountId(), transferRequestDTO.destinationAccountId(), transferRequestDTO.amount());
 
-        Transaction in = transactionRepository.save(new Transaction(transferRequestDTO.originAccountId(), TransactionType.TRANSFER_OUT, transferRequestDTO.amount(), AccountDTOOrigin.balance(), transferRequestDTO.description()));
-        Transaction out = transactionRepository.save(new Transaction(transferRequestDTO.destinationAccountId(), TransactionType.TRANSFER_IN, transferRequestDTO.amount(), AccountDTODestination.balance(), transferRequestDTO.description()));
+        Transaction out = transactionRepository.save(new Transaction(transferRequestDTO.originAccountId(), TransactionType.TRANSFER_OUT, transferRequestDTO.amount(), balances.origin().balance(), transferRequestDTO.description()));
+        Transaction in = transactionRepository.save(new Transaction(transferRequestDTO.destinationAccountId(), TransactionType.TRANSFER_IN, transferRequestDTO.amount(), balances.destination().balance(), transferRequestDTO.description()));
 
         return transferMapper.entityToDto(out, in);
-    }
-
-    @Override
-    public List<TransferResponseDTO> movements(Long AccountId) {
-        return List.of();
     }
 
     private void sameAccount(Long AccountId1, Long AccountId2) {

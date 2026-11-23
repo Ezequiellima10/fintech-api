@@ -17,6 +17,7 @@ import io.github.ezequiellima10.fintech.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -262,5 +264,32 @@ class AccountServiceImplTest {
         // then
         assertEquals(new BigDecimal("600"), savings.getBalance());
         assertEquals(expectedResponse, result);
+    }
+
+    @Test
+    void transfer_originWithHigherId_locksLowerIdFirstAndMovesFunds() {
+        // given
+        SavingsAccount origin = new SavingsAccount(holder, "caja.origen");
+        origin.deposit(new BigDecimal("1000"));
+        SavingsAccount destination = new SavingsAccount(holder, "caja.destino");
+
+        // entities have no id setter (JPA generates it), so it is set by reflection for the test
+        ReflectionTestUtils.setField(origin, "id", 20L);
+        ReflectionTestUtils.setField(destination, "id", 10L);
+
+        when(accountRepository.findWithLockById(10L)).thenReturn(Optional.of(destination));
+        when(accountRepository.findWithLockById(20L)).thenReturn(Optional.of(origin));
+
+        // when
+        accountService.transfer(20L, 10L, new BigDecimal("400"));
+
+        // then
+        // the lower id is locked first whatever its role: A→B and B→A lock in the same order, so no deadlock
+        InOrder inOrder = inOrder(accountRepository);
+        inOrder.verify(accountRepository).findWithLockById(10L);
+        inOrder.verify(accountRepository).findWithLockById(20L);
+
+        assertEquals(new BigDecimal("600"), origin.getBalance());
+        assertEquals(new BigDecimal("400"), destination.getBalance());
     }
 }
