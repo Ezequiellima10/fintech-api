@@ -10,6 +10,7 @@ import io.github.ezequiellima10.fintech.exchangerate.exception.ExchangeRateUnava
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseDTO;
 import io.github.ezequiellima10.fintech.shared.dto.ExceptionResponseFieldsDTO;
 import io.github.ezequiellima10.fintech.transaction.exception.SameAccountTransferException;
+import io.github.ezequiellima10.fintech.transaction.exception.TransactionNotFoundException;
 import io.github.ezequiellima10.fintech.user.exception.UserAlreadyExistsException;
 import io.github.ezequiellima10.fintech.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -91,6 +92,11 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(exceptionResponseDto);
     }
 
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleTransactionNotFound(TransactionNotFoundException t){
+        ExceptionResponseDTO exceptionResponseDto = new ExceptionResponseDTO(HttpStatus.NOT_FOUND.value() , LocalDateTime.now(), t.getMessage());
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponseDto);
+    }
 }
 
 

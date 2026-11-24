@@ -5,6 +5,7 @@ import io.github.ezequiellima10.fintech.account.service.AccountTransactionServic
 import io.github.ezequiellima10.fintech.shared.dto.ResponsePageDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionResponseDTO;
+import io.github.ezequiellima10.fintech.transaction.exception.TransactionNotFoundException;
 import io.github.ezequiellima10.fintech.transaction.mapper.TransactionMapper;
 import io.github.ezequiellima10.fintech.transaction.model.Transaction;
 import io.github.ezequiellima10.fintech.transaction.model.TransactionType;
@@ -50,5 +51,10 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(transactionMapper::entityToDto);
 
         return new ResponsePageDTO<>(page.getContent(), page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
+    }
+
+    @Override
+    public TransactionResponseDTO findById(Long id) {
+        return transactionMapper.entityToDto(transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException("No existe el movimiento con id " + id)));
     }
 }
