@@ -7,6 +7,7 @@ import io.github.ezequiellima10.fintech.account.service.AccountTransactionServic
 import io.github.ezequiellima10.fintech.shared.dto.ResponsePageDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionRequestDTO;
 import io.github.ezequiellima10.fintech.transaction.dto.TransactionResponseDTO;
+import io.github.ezequiellima10.fintech.transaction.exception.TransactionNotFoundException;
 import io.github.ezequiellima10.fintech.transaction.mapper.TransactionMapper;
 import io.github.ezequiellima10.fintech.transaction.model.Transaction;
 import io.github.ezequiellima10.fintech.transaction.model.TransactionType;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -149,5 +151,32 @@ class TransactionServiceImplTest {
         assertThrows(AccountNotFoundException.class, () -> transactionService.findTransactionHistory(99L, pageable));
 
         verify(transactionRepository, never()).findByAccountIdOrderByCreatedAtDesc(any(), any());
+    }
+
+    @Test
+    void findById_existingTransaction_returnsDto() {
+        // given
+        Transaction deposit = new Transaction(10L, TransactionType.DEPOSIT, new BigDecimal("1000"), new BigDecimal("1000"), null);
+        TransactionResponseDTO expectedResponse = TransactionResponseDTO.builder().type(TransactionType.DEPOSIT).build();
+
+        when(transactionRepository.findById(1L)).thenReturn(Optional.of(deposit));
+        when(transactionMapper.entityToDto(deposit)).thenReturn(expectedResponse);
+
+        // when
+        TransactionResponseDTO result = transactionService.findById(1L);
+
+        // then
+        assertEquals(expectedResponse, result);
+    }
+
+    @Test
+    void findById_nonexistentTransaction_throwsTransactionNotFoundException() {
+        // given
+        when(transactionRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // when / then
+        assertThrows(TransactionNotFoundException.class, () -> transactionService.findById(99L));
+
+        verify(transactionMapper, never()).entityToDto(any());
     }
 }

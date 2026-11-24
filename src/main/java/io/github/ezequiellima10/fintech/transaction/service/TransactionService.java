@@ -12,4 +12,6 @@ public interface TransactionService {
     TransactionResponseDTO withdraw(TransactionRequestDTO dto, Long accountId);
 
     ResponsePageDTO<TransactionResponseDTO> findTransactionHistory(Long accountId, Pageable pageable);
+
+    TransactionResponseDTO findById(Long id);
 }

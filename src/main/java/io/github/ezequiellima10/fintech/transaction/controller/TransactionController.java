@@ -85,4 +85,12 @@ public class TransactionController {
     public ResponseEntity<ResponsePageDTO<TransactionResponseDTO>> findTransactionHistory(@PathVariable Long accountId, @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(transactionService.findTransactionHistory(accountId, pageable));
     }
+
+    @Operation(summary = "Busca un movimiento por id")
+    @ApiResponse(responseCode = "200", description = "Movimiento encontrado")
+    @ApiResponse(responseCode = "404", description = "No existe el movimiento")
+    @GetMapping(path = "/api/transactions/{id}")
+    public ResponseEntity<TransactionResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(transactionService.findById(id));
+    }
 }
